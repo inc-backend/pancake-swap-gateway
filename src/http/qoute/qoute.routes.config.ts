@@ -26,7 +26,7 @@ import {
   Percent,
   Token,
   TradeType
-} from "@uniswap/sdk-core";
+} from "@pancakeswap/sdk";
 import {BigNumber, ethers} from "ethers";
 import {default as bunyan, default as Logger} from "bunyan";
 import {

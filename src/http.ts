@@ -5,6 +5,7 @@ import * as expressWinston from 'express-winston';
 import cors from 'cors'
 import {CommonRoutesConfig} from './http/common/common.routes.config';
 import {QuoteRoutes} from './http/qoute/qoute.routes.config';
+import {QuoteRoutes} from './http/qoute/qoute.routes.config';
 import debug from 'debug';
 require('dotenv').config();
 
