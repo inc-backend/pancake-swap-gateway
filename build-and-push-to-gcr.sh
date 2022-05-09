@@ -2,8 +2,8 @@
 set -x
 V=$(date "+%Y%m%d_%H%M%S")
 PROJECT="staging-incognito"
-NAME_SPACE="uniswap-mainnet"
-BACKEND_IMAGE="uniswap-smart-order-router"
+NAME_SPACE="pancake-mainnet"
+BACKEND_IMAGE="pancake-swap-gateway"
 buildNumber=$V
 
 
