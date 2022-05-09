@@ -219,7 +219,7 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
     let requestBody = null;
     const that = this;
     try {
-      requestBody = await RequestDTOSchema.QuoteRequestDTO.validateAsync(_req.body);
+      requestBody = await RequestDTOSchema.GetBestRateRequestDTO.validateAsync(_req.body);
     }
     catch (err: any) {
       res.status(400).json({
