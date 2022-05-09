@@ -1,32 +1,35 @@
-/// <reference types="../../cli/types/bunyan-debug-stream" />
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {CommonRoutesConfig} from '../common/common.routes.config';
 import express from 'express';
 import RequestDTOSchema from './pancake-swap.dto.config';
-// import JSBI from 'jsbi';
 import {ethers} from "ethers";
-import JSBI from 'jsbi';
-import {
-  Token,
-} from "@pancakeswap/sdk";
 import Web3 from 'web3';
-import _ from 'lodash';
+// @ts-ignore
+import {
+  PANCAKE_CONSTANTS,
+  BSC_CONSTANT,
+} from 'incognito-chain-web-js/build/wallet';
+
+import toLower from 'lodash/toLower';
+import { JSBI, Pair, Token, TokenAmount, Trade } from '@pancakeswap/sdk';
+import convert from '../../utils/convert';
 
 ethers.utils.Logger.globalLogger();
 ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.DEBUG);
 
 export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
 
-
-  async _getBestRateFromPancake({params}: { params: any }) {
+  async getBestRateFromPancake(params: { sourceToken: any; destToken: any; amount: any; isSwapFromBuyToSell: any; listDecimals: any; bscConfigs: any; pancakeConfigs: any; }) {
     const {
       sourceToken,
       destToken,
       amount,
       isSwapFromBuyToSell,
       listDecimals,
-      bscConfigs,
-      pancakeConfigs,
     } = params;
+    const bscConfigs = BSC_CONSTANT.BSC_MAINNET_CONFIGS;
+    const pancakeConfigs = PANCAKE_CONSTANTS.PANCAKE_MAINNET_CONFIGS;
+
     const {
       routerV2: pancakeRouterV2,
       factoryAddress: pancakeFactoryAddress,
@@ -55,8 +58,8 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
     const listTokenDecimals = Object.assign({}, listDecimals);
     try {
       [sourceToken, destToken].forEach(function (item) {
-        if (!listTokenDecimals[_.toLower(item.contractIdGetRate)]) {
-          listTokenDecimals[_.toLower(item.contractIdGetRate)] = {
+        if (!listTokenDecimals[toLower(item.contractIdGetRate)]) {
+          listTokenDecimals[toLower(item.contractIdGetRate)] = {
             decimals: item.decimals,
             symbol: item.symbol,
           };
@@ -68,7 +71,7 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
     }
     for (let i = 0; i < listTokens.length - 1; i++) {
       for (let j = i + 1; j < listTokens.length; j++) {
-        if (_.toLower(listTokens[i]) === _.toLower(listTokens[j])) continue;
+        if (toLower(listTokens[i]) === toLower(listTokens[j])) continue;
         const temp = FACTORY_INST.methods
           .getPair(listTokens[i], listTokens[j])
           .encodeABI();
@@ -104,6 +107,7 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
 
     if (getPairResrved.length === 0) {
       console.log('no LPs exist!!!');
+      // @ts-ignore
       return null, null;
     }
 
@@ -113,6 +117,7 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
       .call();
     if (listReserved.length < 2) {
       console.log('no LPs exist!!!');
+      // @ts-ignore
       return null, null;
     }
 
@@ -126,8 +131,9 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
         16,
       );
       const token0 = '0x' + listReserved[i + 1].returnData.substring(26);
+      // @ts-ignore
       let token1 = listPairExist[i / 2].token1;
-      if (listPairExist[i / 2].token0.toLowerCase() !== token0.toLowerCase()) {
+      if (listPairExist?[i / 2].token0?.toLowerCase() !== token0.toLowerCase()) {
         token1 = listPairExist[i / 2].token0;
       }
       const token0Ins = new Token(
@@ -149,8 +155,10 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
       pairList.push(pair);
     }
     const sellOriginalAmount = convert.toOriginalAmount(
-      amount,
-      isSwapFromBuyToSell ? destToken.decimals : sourceToken.decimals,
+      {
+        humanAmount: amount,
+        decimals: isSwapFromBuyToSell ? destToken.decimals : sourceToken.decimals
+      },
     );
     const sellAmount = JSBI.BigInt(sellOriginalAmount);
     const seltTokenInst = new Token(
@@ -202,10 +210,12 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
         .getAmountsIn(sellAmount.toString(), paths)
         .call();
     }
+    // @ts-ignore
     return { paths, outputs, impactAmount: Number(priceImpact) };
   }
 
-  async getQuote(_req: express.Request, res: express.Response) {
+
+  async getBestRate(_req: express.Request, res: express.Response) {
     let requestBody = null;
     const that = this;
     try {
@@ -220,9 +230,7 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
 
     try {
       // console.log("requestBody", requestBody);
-      await this.init({data: requestBody});
-
-      const result = await that.doProcess({flags: requestBody});
+      const result = await that.getBestRateFromPancake(requestBody);
 
       // console.log("result=>", JSON.stringify(result))
       //console.log("routeAmounts=>", JSON.stringify(routeAmounts));
@@ -234,21 +242,9 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
         return;
       }
 
-      const responseJson = this.getSwapResults(
-        requestBody.amount,
-        result?.route,
-        result?.quote,
-        result?.quoteGasAdjusted,
-        result?.estimatedGasUsedQuoteToken,
-        result?.estimatedGasUsedUSD,
-        result?.methodParameters,
-        result?.blockNumber,
-        result?.estimatedGasUsed,
-        result?.gasPriceWei);
-
       res.status(200).json({
         message: 'ok',
-        data: responseJson
+        data: result
       });
       return;
 
@@ -264,7 +260,7 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
   configureRoutes() {
 
     this.app.route(`/api/pancake/get-best-rate`)
-      .post(this.getQuote.bind(this));
+      .post(this.getBestRate.bind(this));
 
     return this.app;
   }

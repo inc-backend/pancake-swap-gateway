@@ -1,18 +1,14 @@
 import Joi from "joi";
 
 const QuoteRequestDTO = Joi.object({
-  version: Joi.number().integer(),
-  tokenIn: Joi.string()
+  sourceToken: Joi.string()
     .required(),
-  tokenOut: Joi.string()
+  destToken: Joi.string()
     .required(),
-  recipient: Joi.string()
-    .optional(),
   amount: Joi.string()
     .required(),
-  exactIn: Joi.boolean(),
-  exactOut: Joi.boolean(),
-  protocols: Joi.string()
+  isSwapFromBuyToSell: Joi.boolean(),
+  listDecimals: Joi.string()
     .optional(),
   forceCrossProtocol: Joi.boolean(),
 
