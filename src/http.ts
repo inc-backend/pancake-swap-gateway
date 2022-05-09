@@ -4,8 +4,7 @@ import * as winston from 'winston';
 import * as expressWinston from 'express-winston';
 import cors from 'cors'
 import {CommonRoutesConfig} from './http/common/common.routes.config';
-import {QuoteRoutes} from './http/qoute/qoute.routes.config';
-import {QuoteRoutes} from './http/qoute/qoute.routes.config';
+import {PancakeSwapRoutesConfig} from './http/pancake-swap/pancake-swap.routes.config';
 import debug from 'debug';
 require('dotenv').config();
 
@@ -35,7 +34,7 @@ if (!process.env.DEBUG) {
 
 app.use(expressWinston.logger(loggerOptions));
 
-routes.push(new QuoteRoutes(app));
+routes.push(new PancakeSwapRoutesConfig(app, 'pancake-swap'));
 
 const runningMessage = `Server running at http://localhost:${port}`;
 
