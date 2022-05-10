@@ -12,10 +12,11 @@ RUN npm install -g npm
 
 RUN npm install
 RUN npm install -g pm2
+RUN pm2 install typescript
 
 # Bundle app source
 COPY . .
 RUN NODE_ENV=production npm run build
 
 EXPOSE 3000
-CMD [ "pm2-runtime", "build/main/src/http.js" ]
+CMD [ "pm2-runtime", "src/http.ts" ]
