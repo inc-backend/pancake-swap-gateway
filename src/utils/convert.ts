@@ -38,7 +38,7 @@ const toNumber = ({
                     text,
                     autoCorrect = false
                   }: { text: any, autoCorrect?: boolean }) => {
-  const number = replaceDecimals({text: {text: text, autoCorrect: autoCorrect}});
+  const number = replaceDecimals({text: text, autoCorrect: autoCorrect});
   return _.toNumber(number);
 };
 

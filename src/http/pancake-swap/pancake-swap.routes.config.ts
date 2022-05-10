@@ -1,25 +1,39 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {CommonRoutesConfig} from '../common/common.routes.config';
-import express from 'express';
-import RequestDTOSchema from './pancake-swap.dto.config';
-import {ethers} from "ethers";
-import Web3 from 'web3';
-// @ts-ignore
-import {
-  PANCAKE_CONSTANTS,
-  BSC_CONSTANT,
-} from 'incognito-chain-web-js/build/wallet';
-
-import toLower from 'lodash/toLower';
 import { JSBI, Pair, Token, TokenAmount, Trade } from '@pancakeswap/sdk';
+import { ethers } from 'ethers';
+import express from 'express';
+// @ts-ignore
+// import {
+// BSC_CONSTANT,
+// PANCAKE_CONSTANTS
+// } from 'incognito-chain-web-js/build/wallet';
+import toLower from 'lodash/toLower';
+import Web3 from 'web3';
 import convert from '../../utils/convert';
+import { CommonRoutesConfig } from '../common/common.routes.config';
+import {
+  BSC_MAINNET_CONFIGS,
+  MULTI_CALL_ABI,
+  PANCAKE_ABI,
+  PANCAKE_FACTORY_ABI,
+  PANCAKE_MAINNET_CONFIGS,
+  PANCAKE_PAIR_ABI,
+} from './constants';
+import RequestDTOSchema from './pancake-swap.dto.config';
 
 ethers.utils.Logger.globalLogger();
 ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.DEBUG);
 
 export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
-
-  async getBestRateFromPancake(params: { sourceToken: any; destToken: any; amount: any; isSwapFromBuyToSell: any; listDecimals: any; bscConfigs: any; pancakeConfigs: any; }) {
+  async getBestRateFromPancake(params: {
+    sourceToken: any;
+    destToken: any;
+    amount: any;
+    isSwapFromBuyToSell: any;
+    listDecimals: any;
+    bscConfigs: any;
+    pancakeConfigs: any;
+  }) {
     const {
       sourceToken,
       destToken,
@@ -27,8 +41,8 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
       isSwapFromBuyToSell,
       listDecimals,
     } = params;
-    const bscConfigs = BSC_CONSTANT.BSC_MAINNET_CONFIGS;
-    const pancakeConfigs = PANCAKE_CONSTANTS.PANCAKE_MAINNET_CONFIGS;
+    const bscConfigs = BSC_MAINNET_CONFIGS;
+    const pancakeConfigs = PANCAKE_MAINNET_CONFIGS;
 
     const {
       routerV2: pancakeRouterV2,
@@ -39,16 +53,16 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
     const listCommon = [...Object.keys(listDecimals)]; // pairs token => sell/buy token -> find best rate
     const web3 = new Web3(bscConfigs.host);
     const MULTI_CALL_INST = new web3.eth.Contract(
-      PANCAKE_CONSTANTS.MULTI_CALL_ABI,
-      pancakeMultiCallContract,
+      MULTI_CALL_ABI,
+      pancakeMultiCallContract
     );
     const FACTORY_INST = new web3.eth.Contract(
-      PANCAKE_CONSTANTS.PANCAKE_FACTORY_ABI,
-      pancakeFactoryAddress,
+      PANCAKE_FACTORY_ABI,
+      pancakeFactoryAddress
     );
     const PANCAKE_ROUTER_INST = new web3.eth.Contract(
-      PANCAKE_CONSTANTS.PANCAKE_ABI,
-      pancakeRouterV2,
+      PANCAKE_ABI,
+      pancakeRouterV2
     );
     const pairList = [];
     // get list LPs
@@ -95,8 +109,8 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
         continue;
       }
       const contractTemp = new web3.eth.Contract(
-        PANCAKE_CONSTANTS.PANCAKE_PAIR_ABI,
-        contractLPAddress,
+        PANCAKE_PAIR_ABI,
+        contractLPAddress
       );
       const temp = contractTemp.methods.getReserves().encodeABI();
       const temp2 = contractTemp.methods.token0().encodeABI();
@@ -123,55 +137,54 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
 
     for (let i = 0; i < listReserved.length; i += 2) {
       const reserve0 = JSBI.BigInt(
-        '0x' + listReserved[i].returnData.substring(2, 66),
-        16,
+        '0x' + listReserved[i].returnData.substring(2, 66)
       );
       const reserve1 = JSBI.BigInt(
-        '0x' + listReserved[i].returnData.substring(66, 130),
-        16,
+        '0x' + listReserved[i].returnData.substring(66, 130)
       );
-      const token0 = '0x' + listReserved[i + 1].returnData.substring(26);
+      const token0: string =
+        '0x' + listReserved[i + 1].returnData.substring(26);
       // @ts-ignore
-      let token1 = listPairExist[i / 2].token1;
-      if (listPairExist?[i / 2].token0?.toLowerCase() !== token0.toLowerCase()) {
-        token1 = listPairExist[i / 2].token0;
+      let token1: any = listPairExist[i / 2].token1;
+      if (
+        listPairExist[i / 2]?.token0?.toLowerCase() !== token0.toLowerCase()
+      ) {
+        token1 = listPairExist[i / 2]?.token0;
       }
       const token0Ins = new Token(
         pancakeChainID,
         token0,
         listTokenDecimals[toLower(token0)].decimals,
-        listTokenDecimals[toLower(token0)].symbol,
+        listTokenDecimals[toLower(token0)].symbol
       );
       const token1Ins = new Token(
         pancakeChainID,
         token1,
         listTokenDecimals[toLower(token1)].decimals,
-        listTokenDecimals[toLower(token1)].symbol,
+        listTokenDecimals[toLower(token1)].symbol
       );
       const pair = new Pair(
         new TokenAmount(token0Ins, reserve0),
-        new TokenAmount(token1Ins, reserve1),
+        new TokenAmount(token1Ins, reserve1)
       );
       pairList.push(pair);
     }
-    const sellOriginalAmount = convert.toOriginalAmount(
-      {
-        humanAmount: amount,
-        decimals: isSwapFromBuyToSell ? destToken.decimals : sourceToken.decimals
-      },
-    );
+    const sellOriginalAmount = convert.toOriginalAmount({
+      humanAmount: amount,
+      decimals: isSwapFromBuyToSell ? destToken.decimals : sourceToken.decimals,
+    });
     const sellAmount = JSBI.BigInt(sellOriginalAmount);
     const seltTokenInst = new Token(
       pancakeChainID,
       sourceToken.contractIdGetRate,
       sourceToken.decimals,
-      sourceToken.symbol,
+      sourceToken.symbol
     );
     const buyTokenInst = new Token(
       pancakeChainID,
       destToken.contractIdGetRate,
       destToken.decimals,
-      destToken.symbol,
+      destToken.symbol
     );
     let result;
     if (!isSwapFromBuyToSell) {
@@ -180,24 +193,24 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
         pairList,
         new TokenAmount(seltTokenInst, sellAmount),
         buyTokenInst,
-        { maxNumResults: 1 },
+        { maxNumResults: 1 }
       );
     } else {
       result = Trade.bestTradeExactOut(
         pairList,
         seltTokenInst,
         new TokenAmount(buyTokenInst, sellAmount),
-        { maxNumResults: 1 },
+        { maxNumResults: 1 }
       );
     }
     if (result.length === 0) {
       console.log('Can not find the best path for this pair');
-      return null, null;
+      return null;
     }
     const priceImpact = result[0]?.priceImpact.toSignificant(18);
-    const bestPath = result[0].route.path;
-    const paths = [];
-    bestPath.forEach(function (item) {
+    const bestPath: any = result[0]?.route.path;
+    const paths: any = [];
+    bestPath.forEach(function (item: any) {
       paths.push(item.address);
     });
     let outputs;
@@ -214,16 +227,17 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
     return { paths, outputs, impactAmount: Number(priceImpact) };
   }
 
-
   async getBestRate(_req: express.Request, res: express.Response) {
     let requestBody = null;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
     try {
-      requestBody = await RequestDTOSchema.GetBestRateRequestDTO.validateAsync(_req.body);
-    }
-    catch (err: any) {
+      requestBody = await RequestDTOSchema.GetBestRateRequestDTO.validateAsync(
+        _req.body
+      );
+    } catch (err: any) {
       res.status(400).json({
-        error: err.message
+        error: err.message,
       });
       return;
     }
@@ -237,29 +251,27 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
 
       if (!result) {
         res.status(400).json({
-          error: 'no route found'
+          error: 'no route found',
         });
         return;
       }
 
       res.status(200).json({
         message: 'ok',
-        data: result
+        data: result,
       });
       return;
-
     } catch (err: any) {
       res.status(500).json({
-        error: err.message
+        error: err.message,
       });
       console.error(err);
     }
-
   }
 
   configureRoutes() {
-
-    this.app.route(`/api/pancake/get-best-rate`)
+    this.app
+      .route(`/api/pancake/get-best-rate`)
       .post(this.getBestRate.bind(this));
 
     return this.app;
