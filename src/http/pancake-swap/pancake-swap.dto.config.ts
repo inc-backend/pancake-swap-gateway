@@ -13,6 +13,7 @@ const GetBestRateRequestDTO = Joi.object({
   isSwapFromBuyToSell: Joi.boolean().required(),
   listDecimals: Joi.object().required(),
   forceCrossProtocol: Joi.boolean(),
+  chainId:Joi.number(),
 });
 
 export default {

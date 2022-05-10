@@ -13,10 +13,12 @@ import convert from '../../utils/convert';
 import { CommonRoutesConfig } from '../common/common.routes.config';
 import {
   BSC_MAINNET_CONFIGS,
+  BSC_TESTNET_CONFIGS,
   MULTI_CALL_ABI,
   PANCAKE_ABI,
   PANCAKE_FACTORY_ABI,
   PANCAKE_MAINNET_CONFIGS,
+  PANCAKE_TESTNET_CONFIGS,
   PANCAKE_PAIR_ABI,
 } from './constants';
 import RequestDTOSchema from './pancake-swap.dto.config';
@@ -31,8 +33,10 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
     amount: any;
     isSwapFromBuyToSell: any;
     listDecimals: any;
-    bscConfigs: any;
-    pancakeConfigs: any;
+    // bscConfigs: any;
+    // pancakeConfigs: any;
+    chainId: number;
+
   }) {
     const {
       sourceToken,
@@ -40,9 +44,21 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
       amount,
       isSwapFromBuyToSell,
       listDecimals,
+      chainId,
     } = params;
-    const bscConfigs = BSC_MAINNET_CONFIGS;
-    const pancakeConfigs = PANCAKE_MAINNET_CONFIGS;
+
+    console.log("chainId: ", chainId)
+
+    let bscConfigs = BSC_MAINNET_CONFIGS;
+    let pancakeConfigs = PANCAKE_MAINNET_CONFIGS;
+
+    if (chainId == PANCAKE_TESTNET_CONFIGS.chainID) {
+        bscConfigs = BSC_TESTNET_CONFIGS;
+        pancakeConfigs = PANCAKE_TESTNET_CONFIGS;
+    }
+
+    console.log("bscConfigs", bscConfigs)
+    console.log("pancakeConfigs", pancakeConfigs)
 
     const {
       routerV2: pancakeRouterV2,
