@@ -1,5 +1,5 @@
 {
-  "name": "@uniswap/smart-order-router",
+  "name": "pancake-swap",
   "version": "2.5.9",
   "description": "Uniswap Smart Order Router",
   "main": "build/main/src/index.js",
@@ -9,7 +9,7 @@
     "type": "git",
     "url": "https://github.com/Uniswap/smart-order-router.git"
   },
-  "license": "GPL",
+  "license": "UNLICENSED",
   "keywords": [],
   "scripts": {
     "build": "run-p compile-v3-types compile-v2-types compile-router compile-external-types && run-p build:*",
@@ -63,8 +63,7 @@
     "express": "^4.17.2",
     "express-winston": "^4.2.0",
     "graphql": "^15.5.0",
-    "graphql-request": "^3.4.0",
-    "incognito-chain-web-js": "https://github.com/incognitochain/incognito-chain-web-js#4.4.1",
+    "graphql-request": "^3.4.0",    
     "joi": "^17.5.0",
     "lodash": "^4.17.21",
     "mnemonist": "^0.38.3",
