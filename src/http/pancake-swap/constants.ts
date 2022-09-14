@@ -425,10 +425,32 @@ export const PANCAKE_TESTNET_CONFIGS = {
 };
 
 export const BSC_MAINNET_CONFIGS = {
-  host: 'https://bsc-dataseed1.ninicoin.io',
+  host: String(process.env.JSON_RPC_PROVIDER_POLYGON),
   incBSCContractAddress: '0x43D037A562099A4C2c95b1E2120cc43054450629',
 };
 export const BSC_TESTNET_CONFIGS = {
   host: String(process.env.JSON_RPC_PROVIDER_POLYGON),
-  incBSCContractAddress: "0x43D037A562099A4C2c95b1E2120cc43054450629",
+  incBSCContractAddress: '0x43D037A562099A4C2c95b1E2120cc43054450629',
+};
+
+export const SPOOKY_MAINNET_CONFIGS = {
+  routerV2: '0xf491e7b69e4244ad4002bc14e878a34207e38c29',
+  chainID: 250,
+  factoryAddress: '0x152ee697f2e276fa89e96742e9bb9ab1f2e61be3',
+  multiCallContract: '0x0753f4142AD5be86855708C5b52fE1A980Ac169b',
+};
+export const SPOOKY_TESTNET_CONFIGS = {
+  routerV2: '0xa6ad18c2ac47803e193f75c3677b14bf19b94883',
+  chainID: 4002,
+  factoryAddress: '0xee4bc42157cf65291ba2fe839ae127e3cc76f741',
+  multiCallContract: '0x30fb06E97a6CD370BCE994A88C428F9F3aB6Ec28',
+};
+
+export const FTM_MAINNET_CONFIGS = {
+  host: String(process.env.JSON_RPC_PROVIDER_POLYGON),
+  incBSCContractAddress: '0x76318093c374e39B260120EBFCe6aBF7f75c8D28',
+};
+export const FTM_TESTNET_CONFIGS = {
+  host: String(process.env.JSON_RPC_PROVIDER_POLYGON),
+  incBSCContractAddress: '0x76318093c374e39B260120EBFCe6aBF7f75c8D28',
 };
