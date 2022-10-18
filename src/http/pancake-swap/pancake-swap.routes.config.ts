@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { CurrencyAmount, JSBI, Pair, Token, Trade } from '@pancakeswap/sdk';
+import { JSBI, Pair, Token, Trade } from '@pancakeswap/sdk';
 import { ethers } from 'ethers';
 import express from 'express';
 // @ts-ignore
@@ -179,10 +179,8 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
         listTokenDecimals[toLower(token1)].symbol
       );
 
-      const ca1 = CurrencyAmount;
-      const tkca1 = ca1.fromRawAmount(token0Ins, reserve0);
-      const ca2 = CurrencyAmount;
-      const tkca2 = ca2.fromRawAmount(token1Ins, reserve1);
+      const tkca1 = new TokenAmount(token0Ins, reserve0);
+      const tkca2 = new TokenAmount(token1Ins, reserve1);
 
       const pair = new Pair(tkca1, tkca2);
       pairList.push(pair);
@@ -206,10 +204,8 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
       destToken.symbol
     );
 
-    const ca1 = CurrencyAmount;
-    const tkca1 = ca1.fromRawAmount(seltTokenInst, sellAmount);
-    const ca2 = CurrencyAmount;
-    const tkca2 = ca2.fromRawAmount(buyTokenInst, sellAmount);
+    const tkca1 = new TokenAmount(seltTokenInst, sellAmount);
+    const tkca2 = new TokenAmount(buyTokenInst, sellAmount);
 
     let result;
     if (!isSwapFromBuyToSell) {

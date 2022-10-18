@@ -421,14 +421,14 @@ export const PANCAKE_MAINNET_CONFIGS = {
   multiCallContract: '0xff6fd90a470aaa0c1b8a54681746b07acdfedc9b',
 };
 export const BSC_MAINNET_CONFIGS = {
-  host: 'https://bsc-dataseed1.ninicoin.io',
+  host: String(process.env.JSON_RPC_PROVIDER_POLYGON),
   incBSCContractAddress: '0x43D037A562099A4C2c95b1E2120cc43054450629',
 };
 
 // testnet
 export const BSC_TESTNET_CONFIGS = {
-  host: "https://api.avax-test.network/ext/C/rpc",
-  incBSCContractAddress: "0xd00ae08403b9bbb9124bb305c09058e32c39a48c",
+  host: 'https://api.avax-test.network/ext/C/rpc',
+  incBSCContractAddress: '0xd00ae08403b9bbb9124bb305c09058e32c39a48c',
 };
 export const PANCAKE_TESTNET_CONFIGS = {
   routerV2: '0xd7f655E3376cE2D7A2b08fF01Eb3B1023191A901',
