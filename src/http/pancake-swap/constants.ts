@@ -427,7 +427,7 @@ export const BSC_MAINNET_CONFIGS = {
 
 // testnet
 export const BSC_TESTNET_CONFIGS = {
-  host: 'https://api.avax-test.network/ext/C/rpc',
+  host: String(process.env.JSON_RPC_PROVIDER_POLYGON),
   incBSCContractAddress: '0xd00ae08403b9bbb9124bb305c09058e32c39a48c',
 };
 export const PANCAKE_TESTNET_CONFIGS = {
