@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { JSBI, Pair, Token, Trade } from '@pancakeswap/sdk';
+import { JSBI, Pair, Token, TokenAmount, Trade } from '@traderjoe-xyz/sdk';
 import { ethers } from 'ethers';
 import express from 'express';
 // @ts-ignore
@@ -182,7 +182,7 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
       const tkca1 = new TokenAmount(token0Ins, reserve0);
       const tkca2 = new TokenAmount(token1Ins, reserve1);
 
-      const pair = new Pair(tkca1, tkca2);
+      const pair = new Pair(tkca1, tkca2, pancakeChainID);
       pairList.push(pair);
     }
     const sellOriginalAmount = convert.toOriginalAmount({
