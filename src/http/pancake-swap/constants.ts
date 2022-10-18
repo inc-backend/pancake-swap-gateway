@@ -437,7 +437,7 @@ export const SPOOKY_MAINNET_CONFIGS = {
   routerV2: '0xf491e7b69e4244ad4002bc14e878a34207e38c29',
   chainID: 250,
   factoryAddress: '0x152ee697f2e276fa89e96742e9bb9ab1f2e61be3',
-  multiCallContract: '0x0753f4142AD5be86855708C5b52fE1A980Ac169b',
+  multiCallContract: '0xD0bD41E2CFc91c79bE4444e49d606BB322875Ecc',
 };
 export const SPOOKY_TESTNET_CONFIGS = {
   routerV2: '0xa6ad18c2ac47803e193f75c3677b14bf19b94883',
@@ -448,7 +448,7 @@ export const SPOOKY_TESTNET_CONFIGS = {
 
 export const FTM_MAINNET_CONFIGS = {
   host: String(process.env.JSON_RPC_PROVIDER_POLYGON),
-  incBSCContractAddress: '0x76318093c374e39B260120EBFCe6aBF7f75c8D28',
+  incBSCContractAddress: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
 };
 export const FTM_TESTNET_CONFIGS = {
   host: String(process.env.JSON_RPC_PROVIDER_POLYGON),
