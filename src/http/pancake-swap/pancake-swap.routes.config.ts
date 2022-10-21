@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { JSBI, Pair, Token, TokenAmount, Trade } from '@trisolaris/sdk';
+// import { JSBI, Pair, Token, TokenAmount, Trade } from 'pancakeswap/sdk';
+import { CurrencyAmount, JSBI, Pair, Token, Trade } from '@pancakeswap/sdk';
 import { ethers } from 'ethers';
 import express from 'express';
 // @ts-ignore
@@ -46,7 +47,7 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
       chainId,
     } = params;
 
-    console.log('chainId: ', chainId);
+
 
     let bscConfigs = BSC_MAINNET_CONFIGS;
     let pancakeConfigs = PANCAKE_MAINNET_CONFIGS;
@@ -58,6 +59,8 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
 
     console.log('bscConfigs', bscConfigs);
     console.log('pancakeConfigs', pancakeConfigs);
+    console.log('chainId', chainId);
+
 
     const {
       routerV2: pancakeRouterV2,
