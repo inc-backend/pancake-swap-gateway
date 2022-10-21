@@ -412,8 +412,8 @@ export const PANCAKE_ABI: any = [
   },
 ];
 
-// joe avax config:
-// mainnet
+// trisolaris aurora config:
+// mainnet (todo update later)
 export const PANCAKE_MAINNET_CONFIGS = {
   routerV2: '0x10ed43c718714eb63d5aa57b78b54704e256024e',
   chainID: 56,
@@ -431,8 +431,8 @@ export const BSC_TESTNET_CONFIGS = {
   incBSCContractAddress: '0xd00ae08403b9bbb9124bb305c09058e32c39a48c',
 };
 export const PANCAKE_TESTNET_CONFIGS = {
-  routerV2: '0xd7f655E3376cE2D7A2b08fF01Eb3B1023191A901',
-  chainID: 43113,
-  factoryAddress: '0xf5c7d9733e5f53abcc1695820c4818c59b457c2c',
-  multiCallContract: '0x49f41c66CC99fc34B136c720b176845C84cC8f42',
+  routerV2: '0x26ec2aFBDFdFB972F106100A3deaE5887353d9B9',
+  chainID: 1313161555,
+  factoryAddress: '0x60913758635b54e6C9685f92201A5704eEe74748',
+  multiCallContract: '0xaa14C66437369f8C0d5375a253bEeC6a761F46f3',
 };

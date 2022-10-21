@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { JSBI, Pair, Token, TokenAmount, Trade } from '@traderjoe-xyz/sdk';
+import { JSBI, Pair, Token, TokenAmount, Trade } from '@trisolaris/sdk';
 import { ethers } from 'ethers';
 import express from 'express';
 // @ts-ignore
