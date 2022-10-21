@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// import { JSBI, Pair, Token, TokenAmount, Trade } from 'pancakeswap/sdk';
-import { CurrencyAmount, JSBI, Pair, Token, Trade } from '@pancakeswap/sdk';
+import { JSBI, Pair, Token, TokenAmount, Trade } from '@traderjoe-xyz/sdk';
 import { ethers } from 'ethers';
 import express from 'express';
 // @ts-ignore
