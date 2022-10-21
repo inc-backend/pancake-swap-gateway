@@ -411,24 +411,28 @@ export const PANCAKE_ABI: any = [
     type: 'function',
   },
 ];
+
+// trisolaris aurora config:
+// mainnet (todo update later)
 export const PANCAKE_MAINNET_CONFIGS = {
   routerV2: '0x10ed43c718714eb63d5aa57b78b54704e256024e',
   chainID: 56,
   factoryAddress: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
   multiCallContract: '0xff6fd90a470aaa0c1b8a54681746b07acdfedc9b',
 };
-export const PANCAKE_TESTNET_CONFIGS = {
-  routerV2: '0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3',
-  chainID: 97,
-  factoryAddress: '0xB7926C0430Afb07AA7DEfDE6DA862aE0Bde767bc',
-  multiCallContract: '0x8425c988cf9d8ca0d8397c8ee4968bf8c5bc46d1',
-};
-
 export const BSC_MAINNET_CONFIGS = {
-  host: 'https://bsc-dataseed1.ninicoin.io',
+  host: String(process.env.JSON_RPC_PROVIDER_POLYGON),
   incBSCContractAddress: '0x43D037A562099A4C2c95b1E2120cc43054450629',
 };
+
+// testnet
 export const BSC_TESTNET_CONFIGS = {
-  host: "https://data-seed-prebsc-2-s3.binance.org:8545",
-  incBSCContractAddress: "0x43D037A562099A4C2c95b1E2120cc43054450629",
+  host: String(process.env.JSON_RPC_PROVIDER_POLYGON),
+  incBSCContractAddress: '0x4cF1d43999606858BaC64B7DbFC196fb4A6853af',
+};
+export const PANCAKE_TESTNET_CONFIGS = {
+  routerV2: '0x26ec2aFBDFdFB972F106100A3deaE5887353d9B9',
+  chainID: 1313161555,
+  factoryAddress: '0x60913758635b54e6C9685f92201A5704eEe74748',
+  multiCallContract: '0xaa14C66437369f8C0d5375a253bEeC6a761F46f3',
 };

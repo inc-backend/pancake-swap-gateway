@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { JSBI, Pair, Token, TokenAmount, Trade } from '@pancakeswap/sdk';
+import { JSBI, Pair, Token, TokenAmount, Trade } from '@traderjoe-xyz/sdk';
 import { ethers } from 'ethers';
 import express from 'express';
 // @ts-ignore
@@ -18,8 +18,8 @@ import {
   PANCAKE_ABI,
   PANCAKE_FACTORY_ABI,
   PANCAKE_MAINNET_CONFIGS,
-  PANCAKE_TESTNET_CONFIGS,
   PANCAKE_PAIR_ABI,
+  PANCAKE_TESTNET_CONFIGS,
 } from './constants';
 import RequestDTOSchema from './pancake-swap.dto.config';
 
@@ -36,7 +36,6 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
     // bscConfigs: any;
     // pancakeConfigs: any;
     chainId: number;
-
   }) {
     const {
       sourceToken,
@@ -47,18 +46,20 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
       chainId,
     } = params;
 
-    console.log("chainId: ", chainId)
+
 
     let bscConfigs = BSC_MAINNET_CONFIGS;
     let pancakeConfigs = PANCAKE_MAINNET_CONFIGS;
 
     if (chainId == PANCAKE_TESTNET_CONFIGS.chainID) {
-        bscConfigs = BSC_TESTNET_CONFIGS;
-        pancakeConfigs = PANCAKE_TESTNET_CONFIGS;
+      bscConfigs = BSC_TESTNET_CONFIGS;
+      pancakeConfigs = PANCAKE_TESTNET_CONFIGS;
     }
 
-    console.log("bscConfigs", bscConfigs)
-    console.log("pancakeConfigs", pancakeConfigs)
+    console.log('bscConfigs', bscConfigs);
+    console.log('pancakeConfigs', pancakeConfigs);
+    console.log('chainId', chainId);
+
 
     const {
       routerV2: pancakeRouterV2,
@@ -179,16 +180,18 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
         listTokenDecimals[toLower(token1)].decimals,
         listTokenDecimals[toLower(token1)].symbol
       );
-      const pair = new Pair(
-        new TokenAmount(token0Ins, reserve0),
-        new TokenAmount(token1Ins, reserve1)
-      );
+
+      const tkca1 = new TokenAmount(token0Ins, reserve0);
+      const tkca2 = new TokenAmount(token1Ins, reserve1);
+
+      const pair = new Pair(tkca1, tkca2, pancakeChainID);
       pairList.push(pair);
     }
     const sellOriginalAmount = convert.toOriginalAmount({
       humanAmount: amount,
       decimals: isSwapFromBuyToSell ? destToken.decimals : sourceToken.decimals,
     });
+
     const sellAmount = JSBI.BigInt(sellOriginalAmount);
     const seltTokenInst = new Token(
       pancakeChainID,
@@ -202,27 +205,30 @@ export class PancakeSwapRoutesConfig extends CommonRoutesConfig {
       destToken.decimals,
       destToken.symbol
     );
+
+    const tkca1 = new TokenAmount(seltTokenInst, sellAmount);
+    const tkca2 = new TokenAmount(buyTokenInst, sellAmount);
+
     let result;
     if (!isSwapFromBuyToSell) {
       result = Trade.bestTradeExactIn(
         // find best route
         pairList,
-        new TokenAmount(seltTokenInst, sellAmount),
+        tkca1,
         buyTokenInst,
-        { maxNumResults: 1 }
+        { maxNumResults: 1, maxHops: 3 }
       );
     } else {
-      result = Trade.bestTradeExactOut(
-        pairList,
-        seltTokenInst,
-        new TokenAmount(buyTokenInst, sellAmount),
-        { maxNumResults: 1 }
-      );
+      result = Trade.bestTradeExactOut(pairList, seltTokenInst, tkca2, {
+        maxNumResults: 1,
+        maxHops: 3,
+      });
     }
     if (result.length === 0) {
       console.log('Can not find the best path for this pair');
       return null;
     }
+
     const priceImpact = result[0]?.priceImpact.toSignificant(18);
     const bestPath: any = result[0]?.route.path;
     const paths: any = [];
