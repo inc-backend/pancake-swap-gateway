@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-
+BigNumber.config({ EXPONENTIAL_AT: 36 });
 // const checkAmount = ({ amount }: { amount: any }) => {
 //   if (!Number.isFinite(amount))
 //     throw new Error('Can not format invalid amount');
